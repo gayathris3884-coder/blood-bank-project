@@ -34,9 +34,9 @@
     <option value=""selected disabled>Select</option>
     <?php
       include 'conn.php';
-      $sql= "select * from blood";
-      $result=mysqli_query($conn,$sql) or die("query unsuccessful.");
-    while($row=mysqli_fetch_assoc($result)){
+      $sql = "SELECT * FROM blood";
+      $result = pg_query($conn,$sql) or die("query unsuccessful: " . pg_last_error());
+    while($row = pg_fetch_assoc($result)){
      ?>
      <option value=" <?php echo $row['blood_id'] ?>"> <?php echo $row['blood_group'] ?> </option>
     <?php } ?>
@@ -57,10 +57,12 @@
 <?php if(isset($_POST['search'])){
 
   $bg=$_POST['blood'];
-  $sql= "select * from donor_details join blood where donor_details.donor_blood=blood.blood_id AND donor_blood='{$bg}' order by rand() limit 5";
-  $result=mysqli_query($conn,$sql) or die("query unsuccessful.");
-    if(mysqli_num_rows($result)>0)   {
-    while($row = mysqli_fetch_assoc($result)) {
+  $sql = "SELECT * FROM donor_details JOIN blood ON donor_details.donor_blood = blood.blood_id WHERE donor_blood = $1 ORDER BY random() LIMIT 5";
+  $result = pg_query_params($conn, $sql, array($bg));
+    if ($result === false) {
+      echo '<div class="alert alert-danger">Query failed: ' . htmlspecialchars(pg_last_error($conn)) . '</div>';
+    } else if(pg_num_rows($result) > 0)   {
+    while($row = pg_fetch_assoc($result)) {
       ?>
 
       <div class="col-lg-4 col-sm-6 portfolio-item" ><br>

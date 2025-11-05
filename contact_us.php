@@ -65,10 +65,12 @@ $result = pg_query_params($conn, $sql, array($name, $email, $number, $message)) 
         <h2>Contact Details</h2>
         <?php
           include 'conn.php';
-          $sql= "select * from contact_info";
-          $result=mysqli_query($conn,$sql);
-          if(mysqli_num_rows($result)>0)   {
-              while($row = mysqli_fetch_assoc($result)) { ?>
+          $sql = "SELECT * FROM contact_info";
+          $result = pg_query($conn, $sql);
+          if ($result === false) {
+              echo '<div class="alert alert-danger">Unable to load contact details: ' . htmlspecialchars(pg_last_error($conn)) . '</div>';
+          } else if (pg_num_rows($result) > 0)   {
+              while($row = pg_fetch_assoc($result)) { ?>
         <br>
         <p>
             <h4>Address :</h4><?php echo $row['contact_address']; ?>

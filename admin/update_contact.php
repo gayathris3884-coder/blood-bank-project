@@ -51,15 +51,19 @@ $active="contact";
       <hr>
       <?php if(isset($_POST['update']))
       {
-        $address=$_POST['address'];
-        $number=$_POST['email'];
-        $email=$_POST['contactno'];
-        $conn=mysqli_connect("localhost","root","","blood_donation") or die("Connection error");
-        $sql= "update contact_info set contact_address='{$address}', contact_mail='{$email}', contact_phone='{$number}' where contact_id='1'";
-        $result=mysqli_query($conn,$sql) or die("query unsuccessful.");
-      echo '<div class="alert alert-success"><b>Contact Details Updated Successfully.</b></div>';
+        $address = $_POST['address'];
+          $number = $_POST['email'];
+          $email = $_POST['contactno'];
+          include 'conn.php';
+          $sql = "UPDATE contact_info SET contact_address = $1, contact_mail = $2, contact_phone = $3 WHERE contact_id = 1";
+          $result = pg_query_params($conn, $sql, array($address, $email, $number));
+          if ($result === false) {
+            echo '<div class="alert alert-danger">Update failed: ' . htmlspecialchars(pg_last_error($conn)) . '</div>';
+          } else {
+            echo '<div class="alert alert-success"><b>Contact Details Updated Successfully.</b></div>';
+          }
 
-        mysqli_close($conn);
+          pg_close($conn);
       }
       ?>
 

@@ -156,12 +156,16 @@ include 'sidebar.php'; ?>
 
     <?php if(isset($_POST['submit']))
     {
-      $type=$_GET['type'];
-      $data=$_POST['data'];
-      $conn=mysqli_connect("localhost","root","","blood_donation") or die("Connection error");
-      $sql= "update pages set page_data='{$data}'where page_type='{$type}'";
-      $result=mysqli_query($conn,$sql) or die("query unsuccessful.");
-    echo '<div class="alert alert-success"><b>Page Data Updated Successfully.</b></div>';
+      $type = $_GET['type'];
+      $data = $_POST['data'];
+      include 'conn.php';
+      $sql = "UPDATE pages SET page_data = $1 WHERE page_type = $2";
+      $result = pg_query_params($conn, $sql, array($data, $type));
+      if ($result === false) {
+        echo '<div class="alert alert-danger">Update failed: ' . htmlspecialchars(pg_last_error($conn)) . '</div>';
+      } else {
+        echo '<div class="alert alert-success"><b>Page Data Updated Successfully.</b></div>';
+      }
     }
 
     ?>

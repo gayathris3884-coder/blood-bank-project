@@ -61,7 +61,7 @@
       echo '<div class="alert alert-danger">Login failed. Database error: ' . htmlspecialchars(pg_last_error($conn)) . '</div>';
     } else if(pg_num_rows($result) > 0)
     {
-      while($row=mysqli_fetch_assoc($result)){
+      while($row = pg_fetch_assoc($result)){
         session_start();
          $_SESSION['loggedin'] = true;
         $_SESSION["username"]=$username;

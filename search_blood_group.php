@@ -1,11 +1,13 @@
 <?php
 
-$bg=$_POST['blood'];
-$conn=mysqli_connect("localhost","root","","blood_donation") or die("Connection error");
-$sql= "select * from donor_details where donor_blood='{$bg}' order by rand() limit 5";
-$result=mysqli_query($conn,$sql) or die("query unsuccessful.");
-  if(mysqli_num_rows($result)>0)   {
-  while($row = mysqli_fetch_assoc($result)) {
+$bg = $_POST['blood'];
+include 'conn.php';
+$sql = "SELECT * FROM donor_details JOIN blood ON donor_details.donor_blood = blood.blood_id WHERE donor_blood = $1 ORDER BY random() LIMIT 5";
+$result = pg_query_params($conn, $sql, array($bg));
+if ($result === false) {
+  echo '<div class="alert alert-danger">Query failed: ' . htmlspecialchars(pg_last_error($conn)) . '</div>';
+} else if(pg_num_rows($result) > 0)   {
+  while($row = pg_fetch_assoc($result)) {
     ?>
     <div class="row">
     <div class="col-lg-4 col-sm-6 portfolio-item" ><br>

@@ -65,8 +65,8 @@ include 'conn.php';
             echo '<div class="alert alert-info alert_dismissible"><b><button type="button" class="close" data-dismiss="alert">&times;</button></b><b>Pending Request "Read".</b></div>';
 
             $que_id = $_GET['id'];
-             $sql1="update contact_query set query_status='1' where  query_id={$que_id}";
-              $result=mysqli_query($conn,$sql1);
+             $sql1 = "UPDATE contact_query SET query_status = 1 WHERE query_id = $1";
+              $result = pg_query_params($conn, $sql1, array($que_id)) or die('Update failed: ' . pg_last_error($conn));
             ?>
         }
       }
@@ -86,9 +86,11 @@ include 'conn.php';
           }
           $offset = ($page - 1) * $limit;
           $count=$offset+1;
-        $sql= " select * from contact_query where query_status>1 LIMIT {$offset},{$limit}";
-        $result=mysqli_query($conn,$sql);
-        if(mysqli_num_rows($result)>0)   {
+        $sql = "SELECT * FROM contact_query WHERE query_status > 1 OFFSET $1 LIMIT $2";
+        $result = pg_query_params($conn, $sql, array($offset, $limit));
+        if ($result === false) {
+          echo '<div class="alert alert-danger">Unable to load queries: ' . htmlspecialchars(pg_last_error($conn)) . '</div>';
+        } else if(pg_num_rows($result) > 0)   {
        ?>
 
        <div class="table-responsive">
@@ -105,7 +107,7 @@ include 'conn.php';
           </thead>
           <tbody>
             <?php
-            while($row = mysqli_fetch_assoc($result)) { ?>
+            while($row = pg_fetch_assoc($result)) { ?>
           <tr>
 
                   <td><?php echo $count++; ?></td>
@@ -136,12 +138,12 @@ include 'conn.php';
 
     <div class="table-responsive"style="text-align:center;align:center">
         <?php
-        $sql1 = "SELECT * FROM contact_query";
-        $result1 = mysqli_query($conn, $sql1) or die("Query Failed.");
+        $sql1 = "SELECT COUNT(*) FROM contact_query";
+        $result1 = pg_query($conn, $sql1) or die("Query Failed: " . pg_last_error());
 
-        if(mysqli_num_rows($result1) > 0){
-
-          $total_records = mysqli_num_rows($result1);
+        if($result1){
+          $rowc = pg_fetch_row($result1);
+          $total_records = $rowc[0];
 
           $total_page = ceil($total_records / $limit);
 
