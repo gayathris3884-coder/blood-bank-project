@@ -51,13 +51,13 @@
 
   if(isset($_POST["login"])){
 
-    $username=mysqli_real_escape_string($conn,$_POST["username"]);
-    $password=mysqli_real_escape_string($conn,$_POST["password"]);
+    $username = pg_escape_string($_POST["username"]);
+    $password = pg_escape_string($_POST["password"]);
 
-    $sql="SELECT * from admin_info where admin_username='$username' and admin_password='$password'";
-    $result=mysqli_query($conn,$sql) or die("query failed.");
+    $sql = "SELECT * FROM admin_info WHERE admin_username = $1 AND admin_password = $2";
+    $result = pg_query_params($conn, $sql, array($username, $password)) or die("query failed: " . pg_last_error());
 
-    if(mysqli_num_rows($result)>0)
+    if(pg_num_rows($result) > 0)
     {
       while($row=mysqli_fetch_assoc($result)){
         session_start();

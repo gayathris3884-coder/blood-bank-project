@@ -83,9 +83,9 @@
       <option value=""selected disabled>Select</option>
       <?php
         include 'conn.php';
-        $sql= "select * from blood";
-        $result=mysqli_query($conn,$sql) or die("query unsuccessful.");
-      while($row=mysqli_fetch_assoc($result)){
+        $sql = "SELECT * FROM blood";
+        $result = pg_query($conn, $sql) or die("query unsuccessful: " . pg_last_error());
+        while($row = pg_fetch_assoc($result)) {
        ?>
        <option value=" <?php echo $row['blood_id'] ?>"> <?php echo $row['blood_group'] ?> </option>
      <?php } ?>

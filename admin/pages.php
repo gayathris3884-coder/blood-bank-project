@@ -71,9 +71,9 @@ include 'conn.php';
       }
       $offset = ($page - 1) * $limit;
       $count=$offset+1;
-        $sql= "select * from pages LIMIT {$offset},{$limit} ";
-        $result=mysqli_query($conn,$sql);
-        if(mysqli_num_rows($result)>0)   {
+        $sql = "SELECT * FROM pages OFFSET $1 LIMIT $2";
+        $result = pg_query_params($conn, $sql, array($offset, $limit));
+        if(pg_num_rows($result) > 0) {
        ?>
 
        <div class="table-responsive">
@@ -87,7 +87,7 @@ include 'conn.php';
           </thead>
           <tbody>
             <?php
-            while($row = mysqli_fetch_assoc($result)) { ?>
+            while($row = pg_fetch_assoc($result)) { ?>
           <tr>
                   <td ><?php echo  $count++; ?></td>
                   <td ><?php echo $row['page_name']; ?></td>
@@ -105,12 +105,12 @@ include 'conn.php';
 
     <div class="table-responsive"style="text-align:center;align:center">
         <?php
-        $sql1 = "SELECT * FROM pages";
-        $result1 = mysqli_query($conn, $sql1) or die("Query Failed.");
+        $sql1 = "SELECT COUNT(*) FROM pages";
+        $result1 = pg_query($conn, $sql1) or die("Query Failed: " . pg_last_error());
 
-        if(mysqli_num_rows($result1) > 0){
-
-          $total_records = mysqli_num_rows($result1);
+        if($result1){
+          $row = pg_fetch_row($result1);
+          $total_records = $row[0];
 
           $total_page = ceil($total_records / $limit);
 

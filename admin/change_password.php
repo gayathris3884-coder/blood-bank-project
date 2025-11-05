@@ -98,24 +98,24 @@ include 'sidebar.php'; ?>
 
 
 if(isset($_POST["submit"])){
-  $username=$_SESSION['username'];
-  $password=mysqli_real_escape_string($conn,$_POST["currpassword"]);
-  $sql="select * from admin_info where admin_username='$username'";
-  $result=mysqli_query($conn,$sql) or die("query failed.");
-  if(mysqli_num_rows($result)>0)
+  $username = $_SESSION['username'];
+  $password = pg_escape_string($_POST["currpassword"]);
+  $sql = "SELECT * FROM admin_info WHERE admin_username = $1";
+  $result = pg_query_params($conn, $sql, array($username)) or die("query failed: " . pg_last_error());
+  if(pg_num_rows($result) > 0)
   {
-    while($row=mysqli_fetch_assoc($result)){
-      if($password==$row['admin_password']){
+    while($row = pg_fetch_assoc($result)){
+      if($password == $row['admin_password']){
 
-    $newpassword=mysqli_real_escape_string($conn,$_POST["newpassword"]);
-    $confpassword=mysqli_real_escape_string($conn,$_POST["confirmpassword"]);
+    $newpassword = pg_escape_string($_POST["newpassword"]);
+    $confpassword = pg_escape_string($_POST["confirmpassword"]);
 
-    if($newpassword==$confpassword)
+    if($newpassword == $confpassword)
     {
-      if($newpassword!=$password)
+      if($newpassword != $password)
       {
-      $sql1="UPDATE admin_info set admin_password='{$newpassword}' where admin_username='{$username}'";
-      $result1=mysqli_query($conn,$sql1) or die("query failed.");
+      $sql1 = "UPDATE admin_info SET admin_password = $1 WHERE admin_username = $2";
+      $result1 = pg_query_params($conn, $sql1, array($newpassword, $username)) or die("query failed: " . pg_last_error());
       echo '<div class="alert alert-success alert_dismissible"><button type="button" class="close" data-dismiss="alert">&times;</button><b> Password Changed Successfully.</b></div>';
       }
       else {

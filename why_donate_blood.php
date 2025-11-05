@@ -28,10 +28,10 @@ include('head.php');
         <p>
           <?php
             include 'conn.php';
-            $sql=$sql= "select * from pages where page_type='donor'";
-            $result=mysqli_query($conn,$sql);
-            if(mysqli_num_rows($result)>0)   {
-                while($row = mysqli_fetch_assoc($result)) {
+            $sql = "SELECT * FROM pages WHERE page_type='donor'";
+            $result = pg_query($conn, $sql);
+            if(pg_num_rows($result) > 0) {
+                while($row = pg_fetch_assoc($result)) {
                   echo $row['page_data'];
                 }
               }

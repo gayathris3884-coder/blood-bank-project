@@ -64,9 +64,9 @@ include 'sidebar.php'; ?>
                 <div class="panel-body panel-info bk-primary text-light" style="background-color:#D6EAF8; border-radius:50px">
                   <div class="stat-panel text-center">
                     <?php
-                      $sql =" SELECT * from donor_details ";
-                      $result=mysqli_query($conn,$sql) or die("query failed.");
-                      $row=mysqli_num_rows($result);
+                      $sql = "SELECT COUNT(*) FROM donor_details";
+                      $result = pg_query($conn, $sql) or die("query failed: " . pg_last_error());
+                      $row = pg_fetch_row($result)[0];
 
                     ?>
 
@@ -90,9 +90,9 @@ include 'sidebar.php'; ?>
                 <div class="panel-body panel-info bk-primary text-light" style="background-color:#ABEBC6;border-radius:50px;">
                   <div class="stat-panel text-center">
                     <?php
-                      $sql1 =" SELECT * from contact_query ";
-                      $result1=mysqli_query($conn,$sql1) or die("query failed.");
-                      $row1=mysqli_num_rows($result1);
+                      $sql1 = "SELECT COUNT(*) FROM contact_query";
+                      $result1 = pg_query($conn, $sql1) or die("query failed: " . pg_last_error());
+                      $row1 = pg_fetch_row($result1)[0];
 
                     ?>
 
@@ -114,9 +114,9 @@ include 'sidebar.php'; ?>
                 <div class="panel-body panel-info bk-primary text-light" style="background-color:#E8DAEF ;border-radius:50px; ">
                   <div class="stat-panel text-center">
                     <?php
-                      $sql2 ="SELECT * from contact_query where query_status=2 ";
-                      $result2=mysqli_query($conn,$sql2) or die("query failed.");
-                      $row2=mysqli_num_rows($result2);
+                      $sql2 = "SELECT COUNT(*) FROM contact_query WHERE query_status = 2";
+                      $result2 = pg_query($conn, $sql2) or die("query failed: " . pg_last_error());
+                      $row2 = pg_fetch_row($result2)[0];
 
                     ?>
 
