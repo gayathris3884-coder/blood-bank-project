@@ -32,11 +32,19 @@ include('head.php');
           include 'conn.php';
           $sql = "SELECT * FROM pages WHERE page_type='aboutus'";
           $result = pg_query($conn, $sql);
-          if(pg_num_rows($result) > 0) {
-              while($row = pg_fetch_assoc($result)) {
-                echo $row['page_data'];
+
+          // If the query failed (for example the table doesn't exist), show a helpful message
+          if ($result === false) {
+              // Avoid exposing raw DB errors in production; show a friendly message and the error for debugging here
+              $dbErr = pg_last_error($conn);
+              echo '<div class="alert alert-danger">Unable to load page content. Database error: ' . htmlspecialchars($dbErr) . '</div>';
+          } else {
+              if (pg_num_rows($result) > 0) {
+                  while($row = pg_fetch_assoc($result)) {
+                    echo $row['page_data'];
+                  }
               }
-            }
+          }
 
          ?>
       </p>

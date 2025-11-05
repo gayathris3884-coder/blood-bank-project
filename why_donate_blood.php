@@ -30,11 +30,17 @@ include('head.php');
             include 'conn.php';
             $sql = "SELECT * FROM pages WHERE page_type='donor'";
             $result = pg_query($conn, $sql);
-            if(pg_num_rows($result) > 0) {
-                while($row = pg_fetch_assoc($result)) {
-                  echo $row['page_data'];
+
+            if ($result === false) {
+                $dbErr = pg_last_error($conn);
+                echo '<div class="alert alert-danger">Unable to load page content. Database error: ' . htmlspecialchars($dbErr) . '</div>';
+            } else {
+                if(pg_num_rows($result) > 0) {
+                    while($row = pg_fetch_assoc($result)) {
+                      echo $row['page_data'];
+                    }
                 }
-              }
+            }
 
            ?>
       </p>

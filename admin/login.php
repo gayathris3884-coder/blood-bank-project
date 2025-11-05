@@ -55,9 +55,11 @@
     $password = pg_escape_string($_POST["password"]);
 
     $sql = "SELECT * FROM admin_info WHERE admin_username = $1 AND admin_password = $2";
-    $result = pg_query_params($conn, $sql, array($username, $password)) or die("query failed: " . pg_last_error());
+    $result = pg_query_params($conn, $sql, array($username, $password));
 
-    if(pg_num_rows($result) > 0)
+    if ($result === false) {
+      echo '<div class="alert alert-danger">Login failed. Database error: ' . htmlspecialchars(pg_last_error($conn)) . '</div>';
+    } else if(pg_num_rows($result) > 0)
     {
       while($row=mysqli_fetch_assoc($result)){
         session_start();

@@ -101,8 +101,10 @@ if(isset($_POST["submit"])){
   $username = $_SESSION['username'];
   $password = pg_escape_string($_POST["currpassword"]);
   $sql = "SELECT * FROM admin_info WHERE admin_username = $1";
-  $result = pg_query_params($conn, $sql, array($username)) or die("query failed: " . pg_last_error());
-  if(pg_num_rows($result) > 0)
+  $result = pg_query_params($conn, $sql, array($username));
+  if ($result === false) {
+    echo '<div class="alert alert-danger">Unable to verify user. Database error: ' . htmlspecialchars(pg_last_error($conn)) . '</div>';
+  } else if(pg_num_rows($result) > 0)
   {
     while($row = pg_fetch_assoc($result)){
       if($password == $row['admin_password']){

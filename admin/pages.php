@@ -72,8 +72,12 @@ include 'conn.php';
       $offset = ($page - 1) * $limit;
       $count=$offset+1;
         $sql = "SELECT * FROM pages OFFSET $1 LIMIT $2";
-        $result = pg_query_params($conn, $sql, array($offset, $limit));
-        if(pg_num_rows($result) > 0) {
+    $result = pg_query_params($conn, $sql, array($offset, $limit));
+    if ($result === false) {
+      $dbErr = pg_last_error($conn);
+      echo '<div class="alert alert-danger">Unable to load pages list. Database error: ' . htmlspecialchars($dbErr) . '</div>';
+    } else {
+    if(pg_num_rows($result) > 0) {
        ?>
 
        <div class="table-responsive">
