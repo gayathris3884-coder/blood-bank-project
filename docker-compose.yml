@@ -1,5 +1,4 @@
-version: '3.8'
-
+version: "3.8"
 services:
   web:
     build: .
@@ -7,17 +6,12 @@ services:
       - "80:80"
     depends_on:
       - db
-    environment:
-      DB_HOST: db
-      DB_USER: root
-      DB_PASS: root
-      DB_NAME: blood_bank
-
   db:
     image: mysql:8.0
-    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: blood_bank
-    volumes:
-      - ./blood_bank_database.sql:/docker-entrypoint-initdb.d/blood_bank_database.sql
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: bdms
+      MYSQL_USER: bdmsuser
+      MYSQL_PASSWORD: bdms123
+    ports:
+      - "3306:3306"

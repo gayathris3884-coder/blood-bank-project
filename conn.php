@@ -1,15 +1,11 @@
 <?php
-$servername = "crossover.proxy.rlwy.net";
-$username = "root";
-$password = "BzZJgwhLddkplBhFqIPSRfAzWOjwfZRM";
-$database = "railway";
+$servername = "db"; // Docker service name if using docker-compose
+$username = "bdmsuser";
+$password = "bdms123";
+$dbname = "bdms";
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $database);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+$conn = mysqli_connect($servername, $username, $password, $dbname);
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
-// echo "Connected successfully";
 ?>
