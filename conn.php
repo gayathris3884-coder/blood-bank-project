@@ -10,6 +10,8 @@ $password = getenv('DB_PASSWORD') ?: 'PCbF8Ybzrq04GIWz7c9UXyOf6KekAaKe';
 $conn_string = "host=$host port=$port dbname=$dbname user=$user password=$password";
 $conn = pg_connect($conn_string);
 
+// Check connection
 if (!$conn) {
     die("Connection failed: " . pg_last_error());
+}
 ?>
