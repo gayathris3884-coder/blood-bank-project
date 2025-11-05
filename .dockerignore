@@ -1,0 +1,7 @@
+.git
+node_modules
+vendor
+*.log
+*.sql
+.DS_Store
+.env
